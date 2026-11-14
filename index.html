@@ -52,6 +52,42 @@ button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #fff;o
 @media(max-width:700px){.scene{background-position:center}.brand{font-size:22px}.tiny{font-size:9px}.info{left:18px;bottom:161px;max-width:55vw}.info h1{font-size:26px}.info p{font-size:11px}.sign{right:4%;bottom:33%;width:132px;height:180px;border-width:6px;padding:12px 8px;gap:7px}.sign strong{font-size:13px}.sign .more{font-size:9px}.motion{right:12px;bottom:118px}.action{padding:11px 13px;font-size:12px}.nav{gap:2px;padding-left:4px;padding-right:4px}.nav button{font-size:8px;padding:7px 1px}.nav button b{font-size:14px}}
 @media(max-height:590px){.info{bottom:105px}.motion{bottom:102px}.sign{bottom:25%}}
 @media(prefers-reduced-motion:reduce){.scene,.door,.sign{transition-duration:.01ms}}
+
+/* スマートフォン表示だけの調整。PC版の演出・配置・JSは変更しない */
+.launch-mobile{display:none}
+@media (max-width:700px){
+  .brand{left:14px;top:11px;font-size:19px;letter-spacing:.04em}
+  .brand small{font-size:7px;letter-spacing:.11em}
+  .tiny{right:10px;top:14px;font-size:7px}
+  .info{left:14px;bottom:155px;max-width:60vw}
+  .info h1{font-size:clamp(20px,6vw,29px);line-height:1.18;margin:4px 0}
+  .info p{font-size:10px;line-height:1.4}
+  .motion{right:10px;bottom:117px;gap:6px}
+  .action{padding:11px 12px;font-size:11px;min-height:42px}
+  .nav{justify-content:flex-start;gap:5px;padding:9px 8px max(12px,env(safe-area-inset-bottom));scrollbar-width:thin}
+  .nav button{flex:0 0 66px;max-width:none;min-width:66px;font-size:9px;white-space:nowrap;padding:9px 3px}
+  .nav button b{font-size:17px;margin-bottom:2px}
+  .sign{right:5%;bottom:37%;width:128px;height:180px;padding:10px 7px}
+  .sign:before{font-size:9px}
+  .sign strong{font-size:13px}
+  .sign .more{font-size:9px}
+  .modal{padding:12px}.modal .paper{padding:24px 18px}
+}
+@media (max-width:700px) and (max-height:440px){
+  /* Googleサイトのスマホ埋め込みが低い場合は、読めない縮小表示を避ける */
+  .launch-mobile{display:flex;position:absolute;z-index:60;inset:0;align-items:center;justify-content:center;gap:8px;
+    flex-direction:column;padding:12px;text-align:center;background:#021e25c9;color:#fff5e5}
+  .launch-mobile strong{font-size:clamp(15px,5vw,22px);font-family:Georgia,serif;letter-spacing:.08em;text-shadow:0 2px 8px #000}
+  .launch-mobile span{font-size:clamp(10px,3.5vw,13px)}
+  .launch-mobile a{display:block;max-width:95%;text-decoration:none;background:linear-gradient(120deg,#ffe2a2,#d7a35c);color:#08282b;
+    padding:11px 19px;border-radius:40px;font-weight:700;font-size:clamp(12px,3.8vw,16px);box-shadow:0 4px 15px #0009}
+  .info,.motion,.nav,.brand,.tiny,.sign{display:none!important}
+}
+@media (max-width:380px) and (min-height:441px){
+  .info{bottom:147px}.motion{bottom:110px}
+  .sign{width:110px;height:160px;right:3%;bottom:35%}
+  .sign strong{font-size:12px}
+}
 </style></head><body>
 <main id="app" data-step="0" aria-label="BLUE SHOWROOM WALK">
 <div id="lobby" class="scene" role="img" aria-label="BLUEエントランス"></div>
@@ -65,6 +101,10 @@ button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #fff;o
 <div class="motion"><button class="action alt" id="back">← 戻る</button><button class="action" id="forward">入館する　→</button></div>
 <nav class="nav" id="nav" aria-label="エリア選択"></nav>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="paper"><h2 id="modalTitle"></h2><p>案内ページへのリンクは公開前に設定します。<br>現在はクリック動作の確認用です。</p><button id="close">館内へ戻る</button></div></div>
+<aside class="launch-mobile" aria-label="スマホでSHOWROOM WALKを開く">
+<strong>BLUE SHOWROOM WALK</strong><span>全画面で館内を歩いてみよう</span>
+<a href="https://bluejp2025-web.github.io/blue-showroom/" target="_blank" rel="noopener noreferrer">ショールームへ入館する　→</a>
+</aside>
 </main>
 <script>
 // 画像差し替えは上部CSSの #lobby / #hall / #front / .door の背景のみ。
