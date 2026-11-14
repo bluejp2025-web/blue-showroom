@@ -117,14 +117,14 @@ button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #fff;o
 // 操作や配置の設定はここから独立しています。
 (()=>{
 const DATA=[
-{title:'WELCOME',sub:'扉を開けて館内へお進みください。',label:'WELCOMEの扉'},
-{title:'エントランス',sub:'BLUEのロビーから一本道の廊下へ。',label:'エントランス'},
-{title:'商談スペース',sub:'左：商談スペース　／　右：ご案内看板',label:'商談',sign:'大切な愛車を高価買取'},
-{title:'キッズスペース',sub:'左：キッズスペース　／　右：ご案内看板',label:'キッズ',sign:'買取のながれ'},
-{title:'査定スペース',sub:'左：査定スペース　／　右：ご案内看板',label:'査定',sign:'こんなお車・バイクもご相談ください'},
-{title:'カフェスペース',sub:'左：カフェスペース　／　右：ご案内看板',label:'カフェ',sign:'LINE相談・無料査定'},
-{title:'アパレルスペース',sub:'左：アパレルスペース　／　右：ご案内看板',label:'アパレル',sign:'BLUE案内'},
-{title:'フロント',sub:'一本道の廊下の終点です。',label:'フロント',sign:'アクセスと個人情報'}
+{title:'WELCOME',sub:'扉を開けて館内へお進みください。',label:'WELCOME'},
+{title:'エントランス',sub:'BLUEのロビーから一本道の廊下へ。',label:'ENTRANCE'},
+{title:'商談スペース',sub:'左：商談スペース　／　右：ご案内看板',label:'CONCEPT',sign:'大切な愛車を高価買取'},
+{title:'キッズスペース',sub:'左：キッズスペース　／　右：ご案内看板',label:'FLOW',sign:'買取のながれ'},
+{title:'査定スペース',sub:'左：査定スペース　／　右：ご案内看板',label:'VEHICLES',sign:'こんなお車・バイクもご相談ください'},
+{title:'カフェスペース',sub:'左：カフェスペース　／　右：ご案内看板',label:'CONTACT',sign:'LINE相談・無料査定'},
+{title:'アパレルスペース',sub:'左：アパレルスペース　／　右：ご案内看板',label:'ABOUT BLUE',sign:'BLUE案内'},
+{title:'フロント',sub:'一本道の廊下の終点です。',label:'ACCESS & PRIVACY',sign:'アクセスと個人情報'}
 ];
 let pos=0,lastWheel=0,touchStart=null;
 const app=document.querySelector('#app'),sign=document.querySelector('#sign'),modal=document.querySelector('#modal'),nav=document.querySelector('#nav');
