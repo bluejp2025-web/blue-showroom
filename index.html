@@ -106,7 +106,7 @@ button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #fff;o
 <button class="sign" id="sign" aria-label="案内看板を開く"><strong id="signTitle"></strong><span class="more">詳しくはこちら ›</span></button>
 <div class="motion"><button class="action alt" id="back">← 戻る</button><button class="action" id="forward">入館する　→</button></div>
 <nav class="nav" id="nav" aria-label="エリア選択"></nav>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="paper"><h2 id="modalTitle"></h2><p id="modalDescription">案内ページへのリンクは公開前に設定します。<br>現在はクリック動作の確認用です。</p><div class="service-links" id="serviceLinks" hidden><a href="https://lin.ee/XM1CIcl" target="_blank" rel="noopener noreferrer">LINEで相談する ↗</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSfDF0F6IGTfnoHuqyUKIHoRbyr6Ry6i4k-2vW55lqDYfZA7gQ/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">無料査定フォームを開く ↗</a></div><button id="close">館内へ戻る</button></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="paper"><h2 id="modalTitle"></h2><p id="modalDescription">案内ページへのリンクは公開前に設定します。<br>現在はクリック動作の確認用です。</p><div class="service-links" id="purchaseLinks" hidden><a href="kaitori.html" target="_blank" rel="noopener noreferrer">BLUEの買取について詳しく見る ↗</a></div><div class="service-links" id="serviceLinks" hidden><a href="https://lin.ee/XM1CIcl" target="_blank" rel="noopener noreferrer">LINEで相談する ↗</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSfDF0F6IGTfnoHuqyUKIHoRbyr6Ry6i4k-2vW55lqDYfZA7gQ/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">無料査定フォームを開く ↗</a></div><button id="close">館内へ戻る</button></div></div>
 <aside class="launch-mobile" aria-label="スマホでSHOWROOM WALKを開く">
 <strong>BLUE SHOWROOM WALK</strong><span>全画面で館内を歩いてみよう</span>
 <a href="https://bluejp2025-web.github.io/blue-showroom/" target="_blank" rel="noopener noreferrer">ショールームへ入館する　→</a>
@@ -133,7 +133,7 @@ function go(n){if(n<0||n>7)return;modal.classList.remove('open');pos=n;app.datas
 function forward(){go(pos===7?0:pos+1)}
 document.querySelector('#forward').addEventListener('click',forward);
 document.querySelector('#back').addEventListener('click',()=>go(pos-1));
-sign.addEventListener('click',()=>{document.querySelector('#modalTitle').textContent=DATA[pos].sign;const isConsultationLinks=(pos===5);document.querySelector('#modalDescription').hidden=isConsultationLinks;document.querySelector('#serviceLinks').hidden=!isConsultationLinks;modal.classList.add('open')});
+sign.addEventListener('click',()=>{document.querySelector('#modalTitle').textContent=DATA[pos].sign;const isConsultationLinks=(pos===5);const isPurchaseInfo=(pos===2);document.querySelector('#modalDescription').hidden=isConsultationLinks||isPurchaseInfo;document.querySelector('#serviceLinks').hidden=!isConsultationLinks;document.querySelector('#purchaseLinks').hidden=!isPurchaseInfo;modal.classList.add('open')});
 document.querySelector('#close').addEventListener('click',()=>modal.classList.remove('open'));
 modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'){modal.classList.remove('open');return}if(modal.classList.contains('open'))return;if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(Math.min(7,pos+1))}else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(Math.max(0,pos-1))}});
