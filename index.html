@@ -11,6 +11,11 @@
 /* Scene switching by wheel/swipe, while original photos and borders remain untouched. */
 .scroll-hint{position:absolute;z-index:6;bottom:10px;left:50%;transform:translateX(-50%);font:12px/1.4 system-ui,sans-serif;letter-spacing:.08em;color:#fff2d1;background:#10292dbb;border:1px solid #d6b67e77;border-radius:99px;padding:5px 13px;pointer-events:none;white-space:nowrap;box-shadow:0 2px 8px #0005}
 @media(max-width:600px){.scroll-hint{bottom:5px;font-size:10px;padding:4px 9px}}
+
+/* Smooth scene fade; sign glow itself remains unchanged. */
+.canvas{opacity:1;transition:opacity .9s ease-in-out}
+.canvas.is-fading{opacity:0;transition-duration:.45s}
+@media(prefers-reduced-motion:reduce){.canvas,.canvas.is-fading{transition-duration:.01s}}
 </style></head><body><header class="top"><div class="brand">BLUE<small>MOTOR VEHICLE TRADING · 2025</small></div><div class="topright">SHOWROOM WALK<br>00–06 · CONCEPT SHOWROOM</div></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="00.jpg"><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div><div class="footer">この空間はBLUEの世界観を表現した架空のショールームです。<br>看板そのものは動かさず、看板の実際の金色の縁だけが、ゆっくり輝いて次のご案内をお知らせします。</div></main><script>
 const scenes=[["WELCOME", "00"], ["ENTRANCE", "01"], ["CONSULTATION", "02"], ["APPRAISAL", "03"], ["KIDS ROOM", "04"], ["CAFÉ SPACE", "05"], ["APPAREL & FRONT", "06"]];
 const signs=[["Why Choose BLUE", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
@@ -21,11 +26,33 @@ const srcFor=i=>String(i).padStart(2,'0')+'.jpg';
 thumbs.innerHTML=scenes.map((s,i)=>`<button class="thumb" data-scene="${i}" aria-label="${s[0]} ${s[1]}"><img loading="lazy" src="${srcFor(i)}" alt=""><span>${String(i).padStart(2,'0')} · ${s[0]}</span></button>`).join('');
 thumbs.addEventListener('click',e=>{const b=e.target.closest('button[data-scene]');if(b)show(Number(b.dataset.scene))});
 function linkFor(i){return signs[i-1][2]+'?from='+i}
-function show(i){current=Math.max(0,Math.min(6,i));document.getElementById('scrollHint').textContent=current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ';img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
+function renderScene(i){current=Math.max(0,Math.min(6,i));document.getElementById('scrollHint').textContent=current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ';img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
   if(current===0){hotspot.hidden=true;edge.hidden=true;guide.innerHTML='<div class="num">00 · WELCOME</div><div><b>BLUE CONCEPT SHOWROOM</b><div class="ja">この先はBLUEの世界観を表現した架空のショールームです</div></div><button type="button" class="action" id="enter">入館する →</button>';document.getElementById('enter').onclick=()=>show(1)}
   else {const s=signs[current-1],r=s[3];hotspot.hidden=false;edge.hidden=false;edge.src='edge-glow-'+String(current).padStart(2,'0')+'.png';hotspot.style.left=r[0]+'%';hotspot.style.top=r[1]+'%';hotspot.style.width=r[2]+'%';hotspot.style.height=r[3]+'%';
   /* Per-pixel gold border overlay uses the original sign, not a square halo. */
   hotspot.setAttribute('aria-label',String(current)+'番 '+s[0]+'、'+s[1]+'。クリックして詳細を見る');hotspot.onclick=()=>location.href=linkFor(current);guide.innerHTML='<div class="num">GUIDE '+String(current).padStart(2,'0')+'</div><div><b>'+s[0]+'</b><div class="ja">'+s[1]+'</div></div><a class="action" href="'+linkFor(current)+'">詳しくはこちら →</a><div class="sub">金色に光る看板をクリック・タップしても開けます。案内ページから戻ると次の看板が光ります。</div>';}
+}
+
+// Preload showroom photos and their gold-edge light overlays.
+scenes.forEach((_,i)=>{
+  const preload=new Image();preload.src=srcFor(i);
+  if(i>0){const glow=new Image();glow.src='edge-glow-'+String(i).padStart(2,'0')+'.png';}
+});
+let transitioning=false;
+const showroomCanvas=document.getElementById('canvas');
+function show(i){
+  const target=Math.max(0,Math.min(scenes.length-1,i));
+  if(transitioning||target===current)return;
+  transitioning=true;
+  showroomCanvas.classList.add('is-fading');
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.setTimeout(()=>{
+    renderScene(target);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      showroomCanvas.classList.remove('is-fading');
+    }));
+    window.setTimeout(()=>{transitioning=false;},reduced?30:950);
+  },reduced?10:450);
 }
 document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);
 document.addEventListener('keydown',e=>{
@@ -42,7 +69,7 @@ window.addEventListener('wheel',e=>{
   if((dir>0&&current===6)||(dir<0&&current===0))return;
   e.preventDefault();
   const now=performance.now();
-  if(now-lastWheelSceneAt<700)return;
+  if(transitioning||now-lastWheelSceneAt<700)return;
   if(dir!==wheelDirection){wheelAccum=0;wheelDirection=dir;}
   const amount=Math.abs(e.deltaY)*(e.deltaMode===1?16:e.deltaMode===2?500:1);
   wheelAccum+=amount;
@@ -67,5 +94,5 @@ swipeArea.addEventListener('touchend',e=>{
   if(Math.abs(dy)>48&&Math.abs(dy)>Math.abs(dx)*1.2){show(current+(dy<0?1:-1));}
 },{passive:true});
 swipeArea.addEventListener('touchcancel',()=>touchStart=null,{passive:true});
-show(incoming>=1&&incoming<=6?incoming:0);
+renderScene(incoming>=1&&incoming<=6?incoming:0);
 </script></body></html>
