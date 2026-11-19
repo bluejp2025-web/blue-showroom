@@ -23,6 +23,14 @@
 .strip{justify-content:safe center;align-items:stretch}
 .thumb{flex:0 0 160px;width:160px;min-width:160px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start}
 .thumb span{display:block;white-space:nowrap;word-break:keep-all;font:500 10px/1.5 system-ui,"Hiragino Kaku Gothic ProN",sans-serif;letter-spacing:-.015em;text-align:center;margin-top:5px}
+
+/* PCのみ: 7枚の文字を同じベースラインで、1行に固定 */
+@media (min-width: 801px){
+  .strip{display:flex;justify-content:center;align-items:stretch;flex-wrap:nowrap;overflow-x:auto;gap:9px;}
+  .strip .thumb{box-sizing:border-box;flex:0 0 165px;width:165px;min-width:165px;height:126px;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;padding:4px 4px 6px;}
+  .strip .thumb img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;flex:none;}
+  .strip .thumb span{width:100%;height:19px;line-height:19px;margin-top:5px;white-space:nowrap;overflow:visible;word-break:normal;display:block;flex:none;text-align:center;font-family:Arial,system-ui,sans-serif;font-size:10px;font-weight:500;letter-spacing:-.02em;}
+}
 </style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="00.jpg"><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 const scenes=[["WELCOME", "00"], ["ENTRANCE", "01"], ["CONSULTATION", "02"], ["APPRAISAL", "03"], ["KIDS ROOM", "04"], ["CAFÉ SPACE", "05"], ["APPAREL & FRONT", "06"]];
 const signs=[["Why Choose BLUE", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
