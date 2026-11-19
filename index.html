@@ -10,7 +10,9 @@
 .nav{position:absolute;top:48%;transform:translateY(-50%);z-index:8;border:1px solid #f2d7a680;background:#142b31dd;color:#ffecce;font-size:24px;width:42px;height:48px;cursor:pointer}.nav.prev{left:0;border-radius:0 9px 9px 0}.nav.next{right:0;border-radius:9px 0 0 9px}.nav:disabled{opacity:.2}.guide{position:relative;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center;background:linear-gradient(95deg,#14282d,#1e2b2d,#14282d);border-block:1px solid #a07a4a6b;padding:11px 16px;min-height:72px;font-family:system-ui,"Hiragino Kaku Gothic ProN",sans-serif}.guide .num{color:#e5bf82;font-size:12px;letter-spacing:.15em}.guide b{display:block;color:#fff6e1;font:600 clamp(15px,2.2vw,21px) Georgia,serif;letter-spacing:.02em}.guide .ja{font-size:clamp(12px,1.6vw,15px);color:#e6dbc7}.guide .action{display:inline-block;border:1px solid #cfab6f;background:#e1bb78;color:#111f23;padding:10px 15px;border-radius:99px;text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap}.guide .action:hover,.guide .action:focus-visible{background:#ffdb97}.guide .sub{color:#d1c4ac;font-size:11px;flex-basis:100%}.strip{display:flex;justify-content:center;gap:9px;overflow-x:auto;padding:10px 12px;background:#11262b}.thumb{background:#15252a;border:1px solid #736244;border-radius:5px;color:#e3d4bc;cursor:pointer;min-width:98px;width:106px;padding:4px 4px 6px}.thumb[aria-current="true"]{border:2px solid #e9c278;box-shadow:0 0 8px #eacb7855}.thumb img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}.thumb span{font-size:10px;display:block;margin-top:5px}.footer{font:11px/1.65 system-ui,sans-serif;color:#bbb7ad;text-align:center;padding:9px 15px 19px}.footer a{color:#d5b879} @media(max-width:600px){.canvas>img{max-height:62dvh}.stage{min-height:25vh}.topright{font-size:10px}.nav{width:34px;height:42px;font-size:20px}.guide{gap:8px}.thumb{min-width:86px;width:90px}}
 /* Scene switching by wheel / horizontal mobile swipe. Original photos and lighting unchanged. */
 .scroll-hint{position:absolute;z-index:6;bottom:10px;left:50%;transform:translateX(-50%);font:12px/1.4 system-ui,sans-serif;letter-spacing:.08em;color:#fff2d1;background:#10292dbb;border:1px solid #d6b67e77;border-radius:99px;padding:5px 13px;pointer-events:none;white-space:nowrap;box-shadow:0 2px 8px #0005}
-@media(max-width:600px){.scroll-hint{bottom:5px;font-size:10px;padding:4px 9px}.stage{touch-action:pan-y pinch-zoom}}
+@media(max-width:600px){.scroll-hint{bottom:5px;font-size:10px;padding:4px 9px}}
+/* Keep vertical page scrolling; capture horizontal swipes even inside a wide Google Sites iframe. */
+@media(pointer:coarse){.stage{touch-action:pan-y pinch-zoom}}
 
 /* Smooth scene fade; sign glow itself remains unchanged. */
 .canvas{opacity:1;transition:opacity .9s ease-in-out}
@@ -75,28 +77,44 @@ window.addEventListener('wheel',e=>{
   wheelAccum+=amount;
   if(wheelAccum>=45){wheelAccum=0;lastWheelSceneAt=now;show(current+dir);}
 },{passive:false});
-// On phones: horizontal swipes change scenes; vertical gestures scroll the host page.
-// Never block vertical scrolling or taps on sign hotspots.
+// Horizontal touch gestures on the showroom image.
+// Google Sites can embed a page at desktop-like CSS widths on smartphones;
+// avoid requiring max-width:600px or pointer:coarse for recognizing real touch events.
 const swipeArea=document.querySelector('.stage');
-const isPhoneSwipe=()=>window.matchMedia('(max-width:600px) and (pointer:coarse)').matches;
+const isPhoneSwipe=()=>window.matchMedia('(pointer:coarse)').matches ||
+  (navigator.maxTouchPoints||0)>0 || window.matchMedia('(max-width:600px)').matches;
 let touchStart=null;
 swipeArea.addEventListener('touchstart',e=>{
-  if(!isPhoneSwipe()||e.touches.length!==1){touchStart=null;return;}
-  touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY};
+  if(e.touches.length!==1){touchStart=null;return;}
+  const p=e.touches[0];
+  touchStart={x:p.clientX,y:p.clientY,lastX:p.clientX,lastY:p.clientY,horizontal:false};
 },{passive:true});
+swipeArea.addEventListener('touchmove',e=>{
+  if(!touchStart || e.touches.length!==1)return;
+  const p=e.touches[0];
+  touchStart.lastX=p.clientX;
+  touchStart.lastY=p.clientY;
+  const dx=p.clientX-touchStart.x,dy=p.clientY-touchStart.y;
+  // Let Google Sites handle vertical gestures as usual.
+  if(Math.abs(dx)>14 && Math.abs(dx)>Math.abs(dy)*1.25){
+    touchStart.horizontal=true;
+    if(e.cancelable)e.preventDefault();
+  }
+},{passive:false});
 swipeArea.addEventListener('touchend',e=>{
-  if(!touchStart||!e.changedTouches.length)return;
-  const dx=e.changedTouches[0].clientX-touchStart.x;
-  const dy=e.changedTouches[0].clientY-touchStart.y;
+  if(!touchStart)return;
+  const p=e.changedTouches.length?e.changedTouches[0]:null;
+  const dx=(p?p.clientX:touchStart.lastX)-touchStart.x;
+  const dy=(p?p.clientY:touchStart.lastY)-touchStart.y;
+  const horizontal=touchStart.horizontal;
   touchStart=null;
-  if(!isPhoneSwipe()||transitioning)return;
-  // Require deliberate horizontal movement; vertical scroll remains untouched.
-  if(Math.abs(dx)>=55&&Math.abs(dx)>Math.abs(dy)*1.35){
+  if(transitioning)return;
+  if(Math.abs(dx)>=42 && Math.abs(dx)>Math.abs(dy)*1.25 && horizontal){
     show(current+(dx<0?1:-1));
   }
 },{passive:true});
-swipeArea.addEventListener('touchcancel',()=>touchStart=null,{passive:true});
-// Keep the help label accurate after phone orientation / window resizing.
+swipeArea.addEventListener('touchcancel',()=>{touchStart=null;},{passive:true});
+// Keep help text accurate when the window / orientation changes.
 window.addEventListener('resize',()=>{
   const hint=document.getElementById('scrollHint');
   const mobile=isPhoneSwipe();
