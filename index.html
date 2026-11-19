@@ -1,6 +1,6 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="BLUEのコンセプトショールームを歩きながら、車・バイクの買取サービスをご案内します。イメージ空間です。"><title>BLUE SHOWROOM WALK | 上下スクロール切替・金枠発光版</title><style>
 :root{--gold:#e6c68c;--text:#fff5e3}*{box-sizing:border-box}body{margin:0;background:#09181c;color:var(--text);font-family:Georgia,"Yu Mincho","Hiragino Mincho ProN",serif}button,a{touch-action:manipulation}.top{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px max(14px,3vw);background:linear-gradient(95deg,#112e34,#121e24);border-bottom:1px solid #816439}.brand{font-size:clamp(20px,3vw,32px);letter-spacing:.15em;font-weight:700}.brand small{display:block;color:#d4b687;font-size:10px;letter-spacing:.16em;font-weight:400}.topright{text-align:right;font-size:12px;line-height:1.7;color:#dac49e}.stage{min-height:40vh;display:flex;justify-content:center;align-items:center;position:relative;background:#050a0b;overflow:hidden}.canvas{display:inline-block;position:relative;line-height:0;max-width:100%}.canvas>img{display:block;max-width:100%;max-height:calc(100dvh - 207px);width:auto;height:auto;object-fit:contain}.hotspot{position:absolute;border:0;background:transparent;cursor:pointer;padding:0;z-index:7;isolation:isolate}
-.hotspot:focus-visible{outline:2px solid #fff7d7;outline-offset:3px}
+.hotspot[hidden]{display:none}.hotspot:focus-visible{outline:2px solid #fff7d7;outline-offset:3px}
 /* Gold trim lighting, sampled from the photographed sign pixels.
    No rectangular borders or floor effects. Source images are untouched. */
 .edgeglow[hidden]{display:none}.edgeglow{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;
@@ -30,9 +30,9 @@ thumbs.addEventListener('click',e=>{const b=e.target.closest('button[data-scene]
 function linkFor(i){return signs[i-1][2]+'?from='+i}
 function renderScene(i){current=Math.max(0,Math.min(6,i));document.getElementById('scrollHint').textContent=window.matchMedia('(max-width:600px) and (pointer:coarse)').matches?(current===6?'→ 右スワイプで前へ':current===0?'← 左スワイプで入館':'← 左スワイプで次へ / 右で戻る'):(current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ');img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
   if(current===0){hotspot.hidden=true;edge.hidden=true;guide.innerHTML='<div><b>BLUE CONCEPT SHOWROOM</b><div class="ja">この先はBLUEの世界観を表現した架空のショールームです</div></div><button type="button" class="action" id="enter">入館する →</button>';document.getElementById('enter').onclick=()=>show(1)}
-  else {const s=signs[current-1],r=s[3];hotspot.hidden=false;edge.hidden=false;edge.src='edge-glow-'+String(current).padStart(2,'0')+'.png';hotspot.style.left=r[0]+'%';hotspot.style.top=r[1]+'%';hotspot.style.width=r[2]+'%';hotspot.style.height=r[3]+'%';
-  /* Per-pixel gold border overlay uses the original sign, not a square halo. */
-  hotspot.setAttribute('aria-label',String(current)+'番 '+s[0]+'、'+s[1]+'。クリックして詳細を見る');hotspot.onclick=()=>location.href=linkFor(current);guide.innerHTML='<div><b>'+s[0]+'</b><div class="ja">'+s[1]+'</div></div><a class="action" href="'+linkFor(current)+'">詳しくはこちら →</a><div class="sub">金色に光る看板をクリック・タップしても開けます。案内ページから戻ると次の看板が光ります。</div>';}
+  else {const s=signs[current-1];hotspot.hidden=true;hotspot.onclick=null;edge.hidden=false;edge.src='edge-glow-'+String(current).padStart(2,'0')+'.png';
+  /* Keep the gold trim lighting decorative only. Navigation uses the detail button. */
+  guide.innerHTML='<div><b>'+s[0]+'</b><div class="ja">'+s[1]+'</div></div><a class="action" href="'+linkFor(current)+'">詳しくはこちら →</a>';}
 }
 
 // Preload showroom photos and their gold-edge light overlays.
