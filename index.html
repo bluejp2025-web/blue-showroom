@@ -112,7 +112,7 @@ if(/Android.*Mobile|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent)
   document.documentElement.classList.add('blue-mobile');
 }
 const scenes=[["WELCOME", "00"], ["ENTRANCE", "01"], ["CONSULTATION", "02"], ["APPRAISAL", "03"], ["KIDS ROOM", "04"], ["CAFÉ SPACE", "05"], ["APPAREL & FRONT", "06"]];
-const signs=[["Why Choose BLUE", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
+const signs=[["WHY BLUE?", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
 let current=0;
 const q=new URLSearchParams(location.search);const incoming=Number(q.get('return'));
 const img=document.getElementById('sceneImg'),hotspot=document.getElementById('hotspot'),edge=document.getElementById('edgeglow'),guide=document.getElementById('guide'),thumbs=document.getElementById('thumbs');
