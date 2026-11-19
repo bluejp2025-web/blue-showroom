@@ -26,6 +26,9 @@
 @media(max-width:740px){.medallions{gap:13px}.circle{padding:5%}.medallion h2{font-size:clamp(12px,2.65vw,18px)}.medallion h2 small{font-size:9px}.tag{width:31px;font-size:17px}.info{grid-template-columns:1fr}.poster{padding:22px 14px 35px}.topcorner{width:75px;height:75px}.topcorner.left{left:11px}.topcorner.right{right:11px}}
 @media(max-width:490px){.medallions{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 12px}.medallion:nth-child(9){grid-column:1/-1;width:calc(50% - 6px);justify-self:center}.logo{font-size:clamp(54px,14vw,75px)}.smallbrand{font-size:11px}.topnav .brand{font-size:27px}.topnav a{font-size:11px}.mainhead{margin-top:25px}.mainhead h1{font-size:29px}.circle{border-width:4px}.medallion h2{font-size:clamp(12px,3.5vw,15px)}.subtitle{font-size:12px}.buttons a{width:100%}}
 @media(prefers-reduced-motion:reduce){.wrap{animation:none}html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.medallion,.buttons a{transition:none}}
+
+/* ROOM navigation: left header brand removed; keep return link at right */
+nav.nav,nav.topnav{justify-content:flex-end}
 </style>
 </head>
 <body>
@@ -38,7 +41,7 @@
 <symbol id="bike" viewBox="0 0 260 135"><ellipse cx="129" cy="117" rx="112" ry="8" fill="#051b21" opacity=".65"/><g fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="58" cy="96" r="30" stroke="#d4c7a8" stroke-width="7"/><circle cx="58" cy="96" r="22" stroke="#27373b" stroke-width="3"/><circle cx="206" cy="96" r="30" stroke="#d4c7a8" stroke-width="7"/><circle cx="206" cy="96" r="22" stroke="#27373b" stroke-width="3"/><path d="M58 96L98 64L143 98L95 97L77 74M143 98L177 67L206 96M97 64L125 65L161 76" stroke="#d5bb82" stroke-width="8"/><path d="M177 67L187 39L202 40M187 39L177 31M97 64L80 53L63 54" stroke="#e4d7b5" stroke-width="6"/><path d="M120 59Q141 38 165 54L170 68L128 73Z" fill="#7b3740" stroke="#d7ba83" stroke-width="3"/><path d="M143 97L131 79M154 99L169 77" stroke="#293439" stroke-width="13"/><path d="M113 97L143 97" stroke="#ddd0b2" stroke-width="5"/><path d="M100 50L130 50" stroke="#282c2b" stroke-width="10"/><path d="M185 41L207 51" stroke="#b7ab8d" stroke-width="4"/><circle cx="199" cy="48" r="12" fill="#f3e4b6" stroke="#aa8952" stroke-width="3"/></g></symbol>
 <symbol id="artcorner" viewBox="0 0 130 130"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M3 115V26Q3 3 26 3H115"/><path d="M11 98V29Q11 11 29 11H98"/><path d="M3 94L94 3M3 71L71 3M3 51L51 3M3 31L31 3M25 116L116 25M45 116L116 45M68 116L116 68"/></g><path d="M19 19Q48 17 53 52Q29 46 19 19Z" fill="#e4c280"/></symbol>
 </defs></svg>
-<div class="wrap"><nav class="topnav"><div class="brand">BLUE<small>MOTOR VEHICLE TRADING</small></div><a href="index.html">← SHOWROOMへ戻る</a></nav>
+<div class="wrap"><nav class="topnav"><a href="index.html">← SHOWROOMへ戻る</a></nav>
 <main class="poster"><svg class="topcorner left" viewBox="0 0 130 130" aria-hidden="true"><use href="#artcorner"/></svg><svg class="topcorner right" viewBox="0 0 130 130" aria-hidden="true"><use href="#artcorner"/></svg>
 <header class="mast"><div class="star" aria-hidden="true">✦</div><div class="logo">BLUE</div><div class="smallbrand">MOTOR VEHICLE TRADING</div></header>
 <section class="mainhead"><h1>こんなお車・バイクも<em>ご相談ください</em></h1><p class="subtitle">故障したお車、長く走った愛車、商用車やバイクまで。<br>状態や年式だけであきらめず、まずはBLUEにご相談ください。</p><div class="flourish" aria-hidden="true">✦</div></section>
