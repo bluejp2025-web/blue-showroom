@@ -8,9 +8,9 @@
 @keyframes trimBreath{0%,100%{opacity:.12}46%,62%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.edgeglow{animation:none;opacity:.7}}
 .nav{position:absolute;top:48%;transform:translateY(-50%);z-index:8;border:1px solid #f2d7a680;background:#142b31dd;color:#ffecce;font-size:24px;width:42px;height:48px;cursor:pointer}.nav.prev{left:0;border-radius:0 9px 9px 0}.nav.next{right:0;border-radius:9px 0 0 9px}.nav:disabled{opacity:.2}.guide{position:relative;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center;background:linear-gradient(95deg,#14282d,#1e2b2d,#14282d);border-block:1px solid #a07a4a6b;padding:11px 16px;min-height:72px;font-family:system-ui,"Hiragino Kaku Gothic ProN",sans-serif}.guide .num{color:#e5bf82;font-size:12px;letter-spacing:.15em}.guide b{display:block;color:#fff6e1;font:600 clamp(15px,2.2vw,21px) Georgia,serif;letter-spacing:.02em}.guide .ja{font-size:clamp(12px,1.6vw,15px);color:#e6dbc7}.guide .action{display:inline-block;border:1px solid #cfab6f;background:#e1bb78;color:#111f23;padding:10px 15px;border-radius:99px;text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap}.guide .action:hover,.guide .action:focus-visible{background:#ffdb97}.guide .sub{color:#d1c4ac;font-size:11px;flex-basis:100%}.strip{display:flex;justify-content:center;gap:9px;overflow-x:auto;padding:10px 12px;background:#11262b}.thumb{background:#15252a;border:1px solid #736244;border-radius:5px;color:#e3d4bc;cursor:pointer;min-width:98px;width:106px;padding:4px 4px 6px}.thumb[aria-current="true"]{border:2px solid #e9c278;box-shadow:0 0 8px #eacb7855}.thumb img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}.thumb span{font-size:10px;display:block;margin-top:5px}.footer{font:11px/1.65 system-ui,sans-serif;color:#bbb7ad;text-align:center;padding:9px 15px 19px}.footer a{color:#d5b879} @media(max-width:600px){.canvas>img{max-height:62dvh}.stage{min-height:25vh}.topright{font-size:10px}.nav{width:34px;height:42px;font-size:20px}.guide{gap:8px}.thumb{min-width:86px;width:90px}}
-/* Scene switching by wheel/swipe, while original photos and borders remain untouched. */
+/* Scene switching by wheel / horizontal mobile swipe. Original photos and lighting unchanged. */
 .scroll-hint{position:absolute;z-index:6;bottom:10px;left:50%;transform:translateX(-50%);font:12px/1.4 system-ui,sans-serif;letter-spacing:.08em;color:#fff2d1;background:#10292dbb;border:1px solid #d6b67e77;border-radius:99px;padding:5px 13px;pointer-events:none;white-space:nowrap;box-shadow:0 2px 8px #0005}
-@media(max-width:600px){.scroll-hint{bottom:5px;font-size:10px;padding:4px 9px}}
+@media(max-width:600px){.scroll-hint{bottom:5px;font-size:10px;padding:4px 9px}.stage{touch-action:pan-y pinch-zoom}}
 
 /* Smooth scene fade; sign glow itself remains unchanged. */
 .canvas{opacity:1;transition:opacity .9s ease-in-out}
@@ -26,7 +26,7 @@ const srcFor=i=>String(i).padStart(2,'0')+'.jpg';
 thumbs.innerHTML=scenes.map((s,i)=>`<button class="thumb" data-scene="${i}" aria-label="${s[0]} ${s[1]}"><img loading="lazy" src="${srcFor(i)}" alt=""><span>${String(i).padStart(2,'0')} · ${s[0]}</span></button>`).join('');
 thumbs.addEventListener('click',e=>{const b=e.target.closest('button[data-scene]');if(b)show(Number(b.dataset.scene))});
 function linkFor(i){return signs[i-1][2]+'?from='+i}
-function renderScene(i){current=Math.max(0,Math.min(6,i));document.getElementById('scrollHint').textContent=current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ';img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
+function renderScene(i){current=Math.max(0,Math.min(6,i));document.getElementById('scrollHint').textContent=window.matchMedia('(max-width:600px) and (pointer:coarse)').matches?(current===6?'→ 右スワイプで前へ':current===0?'← 左スワイプで入館':'← 左スワイプで次へ / 右で戻る'):(current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ');img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
   if(current===0){hotspot.hidden=true;edge.hidden=true;guide.innerHTML='<div class="num">00 · WELCOME</div><div><b>BLUE CONCEPT SHOWROOM</b><div class="ja">この先はBLUEの世界観を表現した架空のショールームです</div></div><button type="button" class="action" id="enter">入館する →</button>';document.getElementById('enter').onclick=()=>show(1)}
   else {const s=signs[current-1],r=s[3];hotspot.hidden=false;edge.hidden=false;edge.src='edge-glow-'+String(current).padStart(2,'0')+'.png';hotspot.style.left=r[0]+'%';hotspot.style.top=r[1]+'%';hotspot.style.width=r[2]+'%';hotspot.style.height=r[3]+'%';
   /* Per-pixel gold border overlay uses the original sign, not a square halo. */
@@ -75,24 +75,32 @@ window.addEventListener('wheel',e=>{
   wheelAccum+=amount;
   if(wheelAccum>=45){wheelAccum=0;lastWheelSceneAt=now;show(current+dir);}
 },{passive:false});
-// On phones: a vertical swipe over the showroom goes to the adjacent scene.
+// On phones: horizontal swipes change scenes; vertical gestures scroll the host page.
+// Never block vertical scrolling or taps on sign hotspots.
 const swipeArea=document.querySelector('.stage');
+const isPhoneSwipe=()=>window.matchMedia('(max-width:600px) and (pointer:coarse)').matches;
 let touchStart=null;
 swipeArea.addEventListener('touchstart',e=>{
-  if(e.touches.length!==1){touchStart=null;return;}
+  if(!isPhoneSwipe()||e.touches.length!==1){touchStart=null;return;}
   touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY};
 },{passive:true});
-swipeArea.addEventListener('touchmove',e=>{
-  if(!touchStart||e.touches.length!==1)return;
-  const dx=e.touches[0].clientX-touchStart.x,dy=e.touches[0].clientY-touchStart.y;
-  if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)*1.2&&((dy<0&&current<6)||(dy>0&&current>0)))e.preventDefault();
-},{passive:false});
 swipeArea.addEventListener('touchend',e=>{
   if(!touchStart||!e.changedTouches.length)return;
-  const dx=e.changedTouches[0].clientX-touchStart.x,dy=e.changedTouches[0].clientY-touchStart.y;
+  const dx=e.changedTouches[0].clientX-touchStart.x;
+  const dy=e.changedTouches[0].clientY-touchStart.y;
   touchStart=null;
-  if(Math.abs(dy)>48&&Math.abs(dy)>Math.abs(dx)*1.2){show(current+(dy<0?1:-1));}
+  if(!isPhoneSwipe()||transitioning)return;
+  // Require deliberate horizontal movement; vertical scroll remains untouched.
+  if(Math.abs(dx)>=55&&Math.abs(dx)>Math.abs(dy)*1.35){
+    show(current+(dx<0?1:-1));
+  }
 },{passive:true});
 swipeArea.addEventListener('touchcancel',()=>touchStart=null,{passive:true});
+// Keep the help label accurate after phone orientation / window resizing.
+window.addEventListener('resize',()=>{
+  const hint=document.getElementById('scrollHint');
+  const mobile=isPhoneSwipe();
+  hint.textContent=mobile?(current===6?'→ 右スワイプで前へ':current===0?'← 左スワイプで入館':'← 左スワイプで次へ / 右で戻る'):(current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ');
+});
 renderScene(incoming>=1&&incoming<=6?incoming:0);
 </script></body></html>
