@@ -15,7 +15,13 @@
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .85s ease,transform .85s ease}.reveal.visible{opacity:1;transform:translateY(0)}.chapter:nth-child(2).reveal.visible,.chapter:nth-child(5).reveal.visible{transform:translateY(18px)}
 @media(max-width:760px){.shell{padding:20px 12px 40px}.frame{padding:24px 12px}.corner{width:51px;height:51px}.story{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 18px}.chapter:nth-child(2),.chapter:nth-child(5),.chapter:nth-child(2).reveal.visible,.chapter:nth-child(5).reveal.visible{transform:none}.chapter p{min-height:0}.topnav .brand{font-size:30px}.eyebrow{letter-spacing:.14em}.headline{line-height:1.09}.centerlabel{font-size:11px}}
 @media(max-width:490px){.story{grid-template-columns:1fr;gap:28px}.chapter{display:grid;grid-template-columns:43% 1fr;gap:0 14px;align-items:center;border-bottom:1px solid #bda88a8a;padding-bottom:16px}.chapter .cap{grid-column:2;grid-row:1}.chapter .art{grid-column:1;grid-row:1 / span 2}.chapter p{grid-column:2;grid-row:2;margin-top:5px;font-size:12px}.chapter h2{font-size:18px}.chapter .english{font-size:10px}.chapter .stepid{font-size:17px}.centerpiece{margin-top:10px}.actions a{width:100%}.subtitle{padding:0 8px}.frame{outline-offset:3px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.chapter:nth-child(2).reveal,.chapter:nth-child(5).reveal{transform:none}}
+/* Smooth entry when arriving from the BLUE showroom (matches vehicles.html). */
+@keyframes bluePageEntrance{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.shell{animation:bluePageEntrance 1s ease-out both}
+@media(prefers-reduced-motion:reduce){.shell{animation:none}html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.chapter:nth-child(2).reveal,.chapter:nth-child(5).reveal{transform:none}}
+
+/* ROOM navigation: left header brand removed; keep return link at right */
+nav.nav,nav.topnav{justify-content:flex-end}
 </style></head><body>
 <!-- SVG symbol library: original, editable vector illustrations; no external images required. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs>
@@ -65,7 +71,7 @@
 <symbol id="keys" viewBox="0 0 280 220"><circle cx="92" cy="78" r="34" fill="none" stroke="#8f7255" stroke-width="12"/><path d="M118 104L202 188L219 168L203 151L217 136L197 117L183 130L144 91" fill="#c8a96e" stroke="#795f47" stroke-width="5"/><path d="M65 159Q139 126 216 173" fill="none" stroke="#98ac9e" stroke-width="7" opacity=".6"/></symbol>
 <symbol id="payment" viewBox="0 0 280 220"><path d="M34 63L200 46L216 148L48 166Z" fill="#a3b397" stroke="#706651" stroke-width="4"/><path d="M49 76L190 62L201 135L60 149Z" fill="none" stroke="#77856e" stroke-width="3"/><circle cx="125" cy="105" r="27" fill="#dce0c2" stroke="#738a72" stroke-width="3"/><text x="125" y="117" text-anchor="middle" font-family="serif" font-size="37" fill="#65795f">¥</text><path d="M76 38L235 29L247 133" fill="none" stroke="#aeb8a4" stroke-width="7"/><path d="M88 20L251 14L262 124" fill="none" stroke="#b9c4af" stroke-width="5"/></symbol>
 </defs></svg>
-<div class="shell"><nav class="topnav"><div class="brand">Blue<span>MOTOR VEHICLE TRADING</span></div><a href="index.html" class="back">← SHOWROOMへ戻る</a></nav>
+<div class="shell"><nav class="topnav"><a href="index.html" class="back">← SHOWROOMへ戻る</a></nav>
 <main><article class="paper"><div class="frame">
 <svg class="corner tl" viewBox="0 0 100 100"><use href="#fan"/></svg><svg class="corner tr" viewBox="0 0 100 100"><use href="#fan"/></svg><svg class="corner bl" viewBox="0 0 100 100"><use href="#fan"/></svg><svg class="corner br" viewBox="0 0 100 100"><use href="#fan"/></svg>
 <div class="eyebrow">MOTOR VEHICLE TRADING · BLUE</div>
