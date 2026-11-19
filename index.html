@@ -98,22 +98,6 @@
   .guide .poster-copy::after{margin-top:3px}
   .guide .action{min-height:40px;padding:10px 22px;font-size:12px}
 }
-
-/* PCのマウス操作環境を基準に適用。Googleサイトの狭い埋め込み幅でも動く。
-   タッチ中心のスマホには適用せず、入館ボタンも変更しない。 */
-@media (hover:hover) and (pointer:fine){
-  .guide .ja,
-  .guide .poster-description{
-    font-size:26px;
-    line-height:1.45;
-  }
-  .guide a.action{
-    font-size:26px;
-    line-height:1.25;
-    min-height:62px;
-    padding:13px 28px;
-  }
-}
 </style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="00.jpg"><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 const scenes=[["WELCOME", "00"], ["ENTRANCE", "01"], ["CONSULTATION", "02"], ["APPRAISAL", "03"], ["KIDS ROOM", "04"], ["CAFÉ SPACE", "05"], ["APPAREL & FRONT", "06"]];
 const signs=[["Why Choose BLUE", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
