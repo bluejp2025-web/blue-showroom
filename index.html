@@ -25,7 +25,7 @@ let current=0;
 const q=new URLSearchParams(location.search);const incoming=Number(q.get('return'));
 const img=document.getElementById('sceneImg'),hotspot=document.getElementById('hotspot'),edge=document.getElementById('edgeglow'),guide=document.getElementById('guide'),thumbs=document.getElementById('thumbs');
 const srcFor=i=>String(i).padStart(2,'0')+'.jpg';
-thumbs.innerHTML=scenes.map((s,i)=>`<button class="thumb" data-scene="${i}" aria-label="${s[0]} ${s[1]}"><img loading="lazy" src="${srcFor(i)}" alt=""><span>${String(i).padStart(2,'0')} · ${s[0]}</span></button>`).join('');
+thumbs.innerHTML=scenes.map((s,i)=>{const label=i===0?'WELCOME':signs[i-1][0];return `<button class="thumb" data-scene="${i}" aria-label="${String(i).padStart(2,'0')} ${label}"><img loading="lazy" src="${srcFor(i)}" alt=""><span>${String(i).padStart(2,'0')} · ${label}</span></button>`;}).join('');
 thumbs.addEventListener('click',e=>{const b=e.target.closest('button[data-scene]');if(b)show(Number(b.dataset.scene))});
 function linkFor(i){return signs[i-1][2]+'?from='+i}
 function renderScene(i){current=Math.max(0,Math.min(6,i));document.getElementById('scrollHint').textContent=window.matchMedia('(max-width:600px) and (pointer:coarse)').matches?(current===6?'→ 右スワイプで前へ':current===0?'← 左スワイプで入館':'← 左スワイプで次へ / 右で戻る'):(current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ');img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
