@@ -22,6 +22,9 @@
 
 /* ROOM navigation: left header brand removed; keep return link at right */
 nav.nav,nav.topnav{justify-content:flex-end}
+
+/* Return link label size adjustment */
+.topnav a:not(.brand), .bottomnav a {font-size:16px;}
 </style></head><body>
 <!-- SVG symbol library: original, editable vector illustrations; no external images required. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs>
@@ -98,7 +101,7 @@ nav.nav,nav.topnav{justify-content:flex-end}
 <div class="ornament" aria-hidden="true">✦</div><p class="endnote">※ 車両の状態やお取引内容によって、必要な書類・手順・お支払い時期などが異なる場合があります。<br>詳細は個別にご案内します。</p>
 </div></article>
 <section class="bottom reveal"><small>BLUE CONCIERGE</small><h2>愛車のこと、まずはご相談ください。</h2><p>ご相談・査定は無料です。無理なご契約は必要ありません。</p><div class="actions"><a href="https://docs.google.com/forms/d/e/1FAIpQLSfDF0F6IGTfnoHuqyUKIHoRbyr6Ry6i4k-2vW55lqDYfZA7gQ/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">無料査定フォーム ↗</a><a href="https://lin.ee/XM1CIcl" target="_blank" rel="noopener noreferrer">BLUE公式LINE ↗</a></div></section>
-<div class="bottomnav"><a href="index.html" id="returnShowroom">← BLUE SHOWROOMへ戻る</a></div></main><footer>© MOTOR VEHICLE TRADING BLUE · CONCEPT SHOWROOM</footer></div>
+<div class="bottomnav"><a href="index.html" id="returnShowroom">← SHOWROOMへ戻る</a></div></main><footer>© MOTOR VEHICLE TRADING BLUE · CONCEPT SHOWROOM</footer></div>
 <script>
 const from=Number(new URLSearchParams(location.search).get('from'));
 if(from>=1&&from<=6){document.querySelectorAll('a[href="index.html"]').forEach(a=>a.href='index.html?return='+Math.min(from+1,6));}
