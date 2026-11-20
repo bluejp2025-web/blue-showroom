@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="BLUEのコンセプトショールームを歩きながら、車・バイクの買取サービスをご案内します。イメージ空間です。"><title>BLUE SHOWROOM WALK | 上下スクロール切替・金枠発光版</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="BLUEのコンセプトショールームを歩きながら、車・バイクの買取サービスをご案内します。イメージ空間です。"><title>BLUE CONCEPT SHOWROOM | MOTOR VEHICLE TRADING BLUE</title><style>
 :root{--gold:#e6c68c;--text:#fff5e3}*{box-sizing:border-box}body{margin:0;background:#09181c;color:var(--text);font-family:Georgia,"Yu Mincho","Hiragino Mincho ProN",serif}button,a{touch-action:manipulation}.top{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px max(14px,3vw);background:linear-gradient(95deg,#112e34,#121e24);border-bottom:1px solid #816439}.brand{font-size:clamp(20px,3vw,32px);letter-spacing:.15em;font-weight:700}.brand small{display:block;color:#d4b687;font-size:10px;letter-spacing:.16em;font-weight:400}.topright{text-align:right;font-size:12px;line-height:1.7;color:#dac49e}.stage{min-height:40vh;display:flex;justify-content:center;align-items:center;position:relative;background:#050a0b;overflow:hidden}.canvas{display:inline-block;position:relative;line-height:0;max-width:100%}.canvas>img{display:block;max-width:100%;max-height:calc(100dvh - 207px);width:auto;height:auto;object-fit:contain}.hotspot{position:absolute;border:0;background:transparent;cursor:pointer;padding:0;z-index:7;isolation:isolate}
 .hotspot[hidden]{display:none}.hotspot:focus-visible{outline:2px solid #fff7d7;outline-offset:3px}
 /* Gold trim lighting, sampled from the photographed sign pixels.
@@ -107,24 +107,24 @@
 }
 html.blue-mobile .strip{display:none!important}
 
-/* WELCOME (00) automatic sliding glass doors. The source photos are never modified.
-   Coordinates are relative to 00.jpg; adjust these four values if the photo is replaced. */
-.canvas{--door-left:33.6%;--door-mid:58.3%;--door-right:82.1%;--door-top:19%;--door-bottom:8%}
+/* WELCOME 00: closed translucent glass panels overlay the existing OPEN
+   entrance photograph. Only panels move, not the scene/photo perspective. */
 .door-effect{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
 .door-effect[hidden]{display:none}
-.door-effect .door-interior,.door-effect .door-leaf{position:absolute;inset:0}
-.door-effect .door-interior{
-  background:linear-gradient(90deg,#0b1016b0 0%,#0000 25%,#0000 75%,#0b1016a0 100%),url('01.jpg') center/cover no-repeat;
-  clip-path:polygon(var(--door-left) var(--door-top),var(--door-right) var(--door-top),var(--door-right) calc(100% - var(--door-bottom)),var(--door-left) calc(100% - var(--door-bottom)));
-  filter:brightness(.78)
-}
-.door-effect .door-leaf{background:url('00.jpg') center/100% 100% no-repeat;will-change:transform;transition:transform 1.35s cubic-bezier(.22,.61,.27,1)}
-.door-effect .door-left{clip-path:polygon(var(--door-left) var(--door-top),var(--door-mid) var(--door-top),var(--door-mid) calc(100% - var(--door-bottom)),var(--door-left) calc(100% - var(--door-bottom)))}
-.door-effect .door-right{clip-path:polygon(var(--door-mid) var(--door-top),var(--door-right) var(--door-top),var(--door-right) calc(100% - var(--door-bottom)),var(--door-mid) calc(100% - var(--door-bottom)))}
-.door-effect.opening .door-left{transform:translateX(-24.7%)}
-.door-effect.opening .door-right{transform:translateX(23.8%)}
+.door-effect .door-interior{display:none}
+.door-effect .door-leaf{position:absolute;top:31.5%;height:41.5%;width:25.65%;
+ background:linear-gradient(105deg,rgba(97,66,41,.68),rgba(142,112,82,.55) 30%,rgba(62,53,50,.76) 65%,rgba(145,116,79,.56));
+ border:2px solid rgba(211,156,70,.96);box-shadow:inset 0 0 0 3px #37271788,inset 0 0 25px #f0c58040,0 0 9px #06070877;
+ backdrop-filter:blur(2.4px);-webkit-backdrop-filter:blur(2.4px);
+ will-change:transform;transition:transform .75s cubic-bezier(.32,.02,.24,1)}
+.door-effect .door-left{left:24.35%;border-right:3px solid #f3cb80}
+.door-effect .door-right{left:50%;border-left:3px solid #f3cb80}
+.door-effect .door-leaf::after{content:'BLUE';position:absolute;top:38%;left:0;width:100%;text-align:center;
+ font:italic 600 clamp(17px,4vw,57px)/1.2 Georgia,serif;color:#f4e2bccc;text-shadow:0 1px 4px #23180e}
+.door-effect.opening .door-left{transform:translateX(-100%)}
+.door-effect.opening .door-right{transform:translateX(100%)}
 @media(prefers-reduced-motion:reduce){.door-effect .door-leaf{transition-duration:.01s}}
-</style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="00.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true" hidden><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
+</style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="entrance-test.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true"><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 // Googleサイトの埋め込み幅によらず、スマートフォンのサムネイルを非表示。
 if(/Android.*Mobile|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent)){
   document.documentElement.classList.add('blue-mobile');
@@ -134,11 +134,11 @@ const signs=[["Why Choose BLUE", "BLUEが選ばれる理由", "kaitori.html", [9
 let current=0;
 const q=new URLSearchParams(location.search);const incoming=Number(q.get('return'));
 const img=document.getElementById('sceneImg'),hotspot=document.getElementById('hotspot'),edge=document.getElementById('edgeglow'),guide=document.getElementById('guide'),thumbs=document.getElementById('thumbs');
-const srcFor=i=>String(i).padStart(2,'0')+'.jpg';
+const srcFor=i=>i===0?'entrance-test.jpg':String(i).padStart(2,'0')+'.jpg';
 thumbs.innerHTML=scenes.map((s,i)=>{const label=i===0?'WELCOME':signs[i-1][0];return `<button class="thumb" data-scene="${i}" aria-label="${String(i).padStart(2,'0')} ${label}"><img loading="lazy" src="${srcFor(i)}" alt=""><span>${String(i).padStart(2,'0')} · ${label}</span></button>`;}).join('');
 thumbs.addEventListener('click',e=>{const b=e.target.closest('button[data-scene]');if(b)show(Number(b.dataset.scene))});
 function linkFor(i){return signs[i-1][2]+'?from='+i}
-function renderScene(i){current=Math.max(0,Math.min(6,i));document.getElementById('scrollHint').textContent=window.matchMedia('(max-width:600px) and (pointer:coarse)').matches?(current===6?'→ 右スワイプで前へ':current===0?'← 左スワイプで入館':'← 左スワイプで次へ / 右で戻る'):(current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ');img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
+function renderScene(i){current=Math.max(0,Math.min(6,i));const _door=document.getElementById('doorEffect');_door.hidden=current!==0;_door.classList.remove('opening');document.getElementById('scrollHint').textContent=window.matchMedia('(max-width:600px) and (pointer:coarse)').matches?(current===6?'→ 右スワイプで前へ':current===0?'← 左スワイプで入館':'← 左スワイプで次へ / 右で戻る'):(current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ');img.src=srcFor(current);img.alt=String(current).padStart(2,'0')+' '+scenes[current][0]+' · BLUEショールーム';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===6;document.querySelectorAll('.thumb').forEach((b,n)=>b.setAttribute('aria-current',n===current?'true':'false'));
   if(current===0){hotspot.hidden=true;edge.hidden=true;guide.innerHTML='<div class="poster-copy"><span class="poster-title">BLUE CONCEPT SHOWROOM</span><div class="poster-description">この先はBLUEの世界観を表現した架空のショールームです</div></div><button type="button" class="action" id="enter">入館する →</button>';document.getElementById('enter').onclick=()=>show(1)}
   else {const s=signs[current-1];hotspot.hidden=true;hotspot.onclick=null;edge.hidden=false;edge.src='edge-glow-'+String(current).padStart(2,'0')+'.png';
   /* Keep the gold trim lighting decorative only. Navigation uses the detail button. */
@@ -174,7 +174,7 @@ function show(i){
         requestAnimationFrame(()=>requestAnimationFrame(()=>showroomCanvas.classList.remove('is-fading')));
         window.setTimeout(()=>{transitioning=false},950);
       },450);
-    },1450);
+    },780);
     return;
   }
   showroomCanvas.classList.add('is-fading');
