@@ -106,13 +106,31 @@
   .strip{display:none!important}
 }
 html.blue-mobile .strip{display:none!important}
-</style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="00.jpg"><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
+
+/* WELCOME (00) automatic sliding glass doors. The source photos are never modified.
+   Coordinates are relative to 00.jpg; adjust these four values if the photo is replaced. */
+.canvas{--door-left:33.6%;--door-mid:58.3%;--door-right:82.1%;--door-top:19%;--door-bottom:8%}
+.door-effect{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.door-effect[hidden]{display:none}
+.door-effect .door-interior,.door-effect .door-leaf{position:absolute;inset:0}
+.door-effect .door-interior{
+  background:linear-gradient(90deg,#0b1016b0 0%,#0000 25%,#0000 75%,#0b1016a0 100%),url('01.jpg') center/cover no-repeat;
+  clip-path:polygon(var(--door-left) var(--door-top),var(--door-right) var(--door-top),var(--door-right) calc(100% - var(--door-bottom)),var(--door-left) calc(100% - var(--door-bottom)));
+  filter:brightness(.78)
+}
+.door-effect .door-leaf{background:url('00.jpg') center/100% 100% no-repeat;will-change:transform;transition:transform 1.35s cubic-bezier(.22,.61,.27,1)}
+.door-effect .door-left{clip-path:polygon(var(--door-left) var(--door-top),var(--door-mid) var(--door-top),var(--door-mid) calc(100% - var(--door-bottom)),var(--door-left) calc(100% - var(--door-bottom)))}
+.door-effect .door-right{clip-path:polygon(var(--door-mid) var(--door-top),var(--door-right) var(--door-top),var(--door-right) calc(100% - var(--door-bottom)),var(--door-mid) calc(100% - var(--door-bottom)))}
+.door-effect.opening .door-left{transform:translateX(-24.7%)}
+.door-effect.opening .door-right{transform:translateX(23.8%)}
+@media(prefers-reduced-motion:reduce){.door-effect .door-leaf{transition-duration:.01s}}
+</style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="00.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true" hidden><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 // Googleサイトの埋め込み幅によらず、スマートフォンのサムネイルを非表示。
 if(/Android.*Mobile|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent)){
   document.documentElement.classList.add('blue-mobile');
 }
 const scenes=[["WELCOME", "00"], ["ENTRANCE", "01"], ["CONSULTATION", "02"], ["APPRAISAL", "03"], ["KIDS ROOM", "04"], ["CAFÉ SPACE", "05"], ["APPAREL & FRONT", "06"]];
-const signs=[["WHY BLUE?", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
+const signs=[["Why Choose BLUE", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
 let current=0;
 const q=new URLSearchParams(location.search);const incoming=Number(q.get('return'));
 const img=document.getElementById('sceneImg'),hotspot=document.getElementById('hotspot'),edge=document.getElementById('edgeglow'),guide=document.getElementById('guide'),thumbs=document.getElementById('thumbs');
@@ -138,8 +156,28 @@ function show(i){
   const target=Math.max(0,Math.min(scenes.length-1,i));
   if(transitioning||target===current)return;
   transitioning=true;
-  showroomCanvas.classList.add('is-fading');
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Only the first entrance (00 → 01) uses sliding doors; all other scenes keep their fade.
+  if(current===0 && target===1 && !reduced){
+    const doors=document.getElementById('doorEffect');
+    doors.hidden=false;
+    doors.classList.remove('opening');
+    // Force layout so the closed state is painted before opening.
+    void doors.offsetWidth;
+    requestAnimationFrame(()=>doors.classList.add('opening'));
+    window.setTimeout(()=>{
+      showroomCanvas.classList.add('is-fading');
+      window.setTimeout(()=>{
+        renderScene(1);
+        doors.classList.remove('opening');
+        doors.hidden=true;
+        requestAnimationFrame(()=>requestAnimationFrame(()=>showroomCanvas.classList.remove('is-fading')));
+        window.setTimeout(()=>{transitioning=false},950);
+      },450);
+    },1450);
+    return;
+  }
+  showroomCanvas.classList.add('is-fading');
   window.setTimeout(()=>{
     renderScene(target);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
