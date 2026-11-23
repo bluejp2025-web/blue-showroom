@@ -146,4 +146,22 @@ document.addEventListener('click', function(e) {
 }, true);
 </script>
 
+
+<script>
+/* BLUE GA4: 案内ページ閲覧計測 */
+(function() {
+  if (typeof gtag !== 'function') return;
+  const roomMap = {"1": "ENTRANCE", "2": "CONSULTATION", "3": "APPRAISAL", "4": "KIDS ROOM", "5": "CAFÉ SPACE", "6": "APPAREL & FRONT"};
+  const params = new URLSearchParams(location.search);
+  const fromRoom = params.get('from') || '';
+  gtag('event', 'blue_info_page_view', {
+    page_name: "FLOW",
+    page_path: "/flow.html",
+    source_room_number: fromRoom,
+    source_room_name: roomMap[fromRoom] || 'DIRECT_OR_OTHER',
+    transport_type: 'beacon'
+  });
+})();
+</script>
+
 </body></html>
