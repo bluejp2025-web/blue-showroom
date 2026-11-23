@@ -182,21 +182,35 @@ function renderScene(i){current=Math.max(0,Math.min(6,i));const _door=document.g
   guide.innerHTML='<div class="poster-copy"><b>'+s[0]+'</b><div class="ja">'+s[1]+'</div></div><a class="action" href="'+linkFor(current)+'">詳しくはこちら →</a>';}
 }
 
-// BLUE GA4: record clicks on the six "詳しくはこちら" guide links.
+// BLUE GA4: record guide-link clicks before navigating to the destination.
 // ACCESS・PRIVACY is intentionally one combined guide page / room.
 document.getElementById('guide').addEventListener('click', function(e){
   const link = e.target.closest('a.action');
-  if(!link) return;
+  if(!link || current === 0) return;
   const scene = scenes[current];
   const sign = signs[current - 1];
-  if(typeof gtag === 'function' && sign){
-    gtag('event', 'blue_info_link_click', {
-      room_number: String(current).padStart(2, '0'),
-      room_name: scene[0],
-      link_name: sign[0],
-      destination_page: sign[2]
-    });
-  }
+  if(typeof gtag !== 'function' || !sign) return;
+
+  // Prevent immediate navigation from interrupting the GA4 event request.
+  e.preventDefault();
+  const destination = link.href;
+  let navigated = false;
+  const go = function(){
+    if(navigated) return;
+    navigated = true;
+    window.location.href = destination;
+  };
+  gtag('event', 'blue_info_link_click', {
+    room_number: String(current).padStart(2, '0'),
+    room_name: scene[0],
+    link_name: sign[0],
+    destination_page: sign[2],
+    transport_type: 'beacon',
+    event_callback: go,
+    event_timeout: 1000
+  });
+  // Fallback in case the callback is not returned by the browser.
+  setTimeout(go, 1200);
 });
 
 // Preload showroom photos and their gold-edge light overlays.
