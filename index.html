@@ -140,25 +140,7 @@ html.blue-mobile .strip{display:none!important}
 .door-effect.opening .door-left{transform:translateX(-21.3%)}
 .door-effect.opening .door-right{transform:translateX(22%)}
 @media(prefers-reduced-motion:reduce){.door-effect .door-leaf{transition-duration:.01s}}
-
-/* ROOM GUIDE: restored independent menu */
-.top{position:relative;justify-content:flex-end;z-index:30}
-.room-menu-button{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid #c9a46b;border-radius:5px;background:#152b30;color:#f8e5c3;font:700 13px system-ui,sans-serif;cursor:pointer;letter-spacing:.06em}
-.room-menu-button .bars{font-size:23px;line-height:1}
-.room-menu-panel{position:absolute;right:max(14px,3vw);top:calc(100% - 4px);width:min(320px,calc(100vw - 28px));padding:9px;background:#13272c;border:1px solid #c9a46b;box-shadow:0 12px 32px #0009;border-radius:5px;z-index:40}
-.room-menu-panel[hidden]{display:none}
-.room-menu-panel a{display:block;padding:12px 13px;color:#f8e5c3;text-decoration:none;border-bottom:1px solid #a8895044;font:600 13px/1.4 system-ui,sans-serif}
-.room-menu-panel a:last-child{border-bottom:0}
-.room-menu-panel a:hover,.room-menu-panel a:focus-visible{background:#28444a;outline:2px solid #e6c68c;outline-offset:-2px}
-</style></head><body><header class="top"><button type="button" id="roomMenuButton" class="room-menu-button" aria-expanded="false" aria-controls="roomMenuPanel"><span class="bars" aria-hidden="true">☰</span> ROOM GUIDE</button><nav id="roomMenuPanel" class="room-menu-panel" aria-label="ROOM GUIDE" hidden><a href="kaitori.html">01 WHY BLUE?</a><a href="flow.html">02 FLOW</a><a href="vehicles.html">03 LINEUP</a><a href="contact.html">04 CONTACT</a><a href="access.html">05 ACCESS</a><a href="about.html">06 ABOUT</a></nav></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="BLUE_entrance_final.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true"><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
-
-// ROOM GUIDE: toggle and close without interfering with showroom navigation.
-const roomMenuButton=document.getElementById('roomMenuButton');
-const roomMenuPanel=document.getElementById('roomMenuPanel');
-function closeRoomMenu(){roomMenuPanel.hidden=true;roomMenuButton.setAttribute('aria-expanded','false');}
-roomMenuButton.addEventListener('click',()=>{const opening=roomMenuPanel.hidden;roomMenuPanel.hidden=!opening;roomMenuButton.setAttribute('aria-expanded',String(opening));});
-document.addEventListener('click',e=>{if(!roomMenuButton.contains(e.target)&&!roomMenuPanel.contains(e.target))closeRoomMenu();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRoomMenu();});
+</style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="BLUE_entrance_final.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true"><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 // Googleサイトの埋め込み幅によらず、スマートフォンのサムネイルを非表示。
 if(/Android.*Mobile|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent)){
   document.documentElement.classList.add('blue-mobile');
