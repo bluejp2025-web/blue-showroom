@@ -139,101 +139,28 @@ html.blue-mobile .strip{display:none!important}
 }
 .door-effect.opening .door-left{transform:translateX(-21.3%)}
 .door-effect.opening .door-right{transform:translateX(22%)}
-@media(prefers-reduced-motion:reduce){.door-effect .door-leaf{transition-duration:.01s}}
+/* Door opens on explicit user action, including when Reduce Motion is enabled. */
 
 /* BLUEショールーム：スマホ表示最適化
    PC版・自動ドア・各シーンの動作は変更しない */
-
 @media (max-width:700px), (hover:none) and (pointer:coarse) {
-
-  /* 画像上の空白を削除 */
-  .top {
-    display: none !important;
-  }
-
-  /* ショールーム画像を横幅いっぱいに */
-  .stage {
-    min-height: 0 !important;
-    width: 100%;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  .canvas {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .canvas > img#sceneImg {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    max-height: none !important;
-    object-fit: contain;
-  }
-
-  /* 下の案内をコンパクトに */
-  .guide {
-    min-height: 0 !important;
-    padding: 12px 12px 15px !important;
-    gap: 9px !important;
-  }
-
-  .guide .poster-copy {
-    gap: 4px;
-  }
-
-  .guide .poster-title,
-  .guide b {
-    font-size: clamp(19px, 5vw, 25px);
-    line-height: 1.25;
-  }
-
-  .guide .poster-description,
-  .guide .ja {
-    font-size: 11px;
-    line-height: 1.5;
-  }
-
-  /* 入館ボタンをすっきり */
-  .guide .action {
-    min-height: 42px;
-    padding: 10px 25px;
-    font-size: 13px;
-  }
-
-  /* スマホのサムネイル非表示 */
-  .strip {
-    display: none !important;
-  }
+  .top {display:none!important}
+  .stage {min-height:0!important;width:100%;padding:0!important;margin:0!important}
+  .canvas {display:block;width:100%;max-width:100%;margin:0 auto}
+  .canvas > img#sceneImg {display:block;width:100%;max-width:100%;height:auto;max-height:none!important;object-fit:contain}
+  .guide {min-height:0!important;padding:12px 12px 15px!important;gap:9px!important}
+  .guide .poster-copy {gap:4px}
+  .guide .poster-title,.guide b {font-size:clamp(19px,5vw,25px);line-height:1.25}
+  .guide .poster-description,.guide .ja {font-size:11px;line-height:1.5}
+  .guide .action {min-height:42px;padding:10px 25px;font-size:13px}
+  .strip {display:none!important}
 }
-
 /* Googleサイト埋め込みで画面幅が広く判定される場合 */
-html.blue-mobile .top {
-  display: none !important;
-}
-html.blue-mobile .stage {
-  min-height: 0 !important;
-  padding: 0 !important;
-}
-html.blue-mobile .canvas {
-  display: block;
-  width: 100%;
-}
-html.blue-mobile .canvas > img#sceneImg {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: none !important;
-}
-html.blue-mobile .guide {
-  min-height: 0 !important;
-  padding: 12px 12px 15px !important;
-  gap: 9px !important;
-}
+html.blue-mobile .top {display:none!important}
+html.blue-mobile .stage {min-height:0!important;padding:0!important}
+html.blue-mobile .canvas {display:block;width:100%}
+html.blue-mobile .canvas > img#sceneImg {display:block;width:100%;height:auto;max-height:none!important}
+html.blue-mobile .guide {min-height:0!important;padding:12px 12px 15px!important;gap:9px!important}
 </style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="BLUE_entrance_final.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true"><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 // Googleサイトの埋め込み幅によらず、スマートフォンのサムネイルを非表示。
 if(/Android.*Mobile|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent)){
@@ -277,18 +204,30 @@ function show(i){
   transitioning=true;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // Only the first entrance (00 → 01) uses sliding doors; all other scenes keep their fade.
-  if(current===0 && target===1 && !reduced){
+  if(current===0 && target===1){
     const doors=document.getElementById('doorEffect');
     doors.hidden=false;
     doors.classList.remove('opening');
-    // Force layout so the closed state is painted before opening.
     void doors.offsetWidth;
-    requestAnimationFrame(()=>doors.classList.add('opening'));
+    const left=doors.querySelector('.door-left');
+    const right=doors.querySelector('.door-right');
+    const timing={duration:750,easing:'cubic-bezier(.32,.02,.24,1)',fill:'both'};
+    let mobileDoorAnimations=[];
+    if(typeof left.animate==='function' && typeof right.animate==='function'){
+      mobileDoorAnimations=[
+        left.animate([{transform:'translateX(0)'},{transform:'translateX(-21.3%)'}],timing),
+        right.animate([{transform:'translateX(0)'},{transform:'translateX(22%)'}],timing)
+      ];
+    } else {
+      requestAnimationFrame(()=>requestAnimationFrame(()=>doors.classList.add('opening')));
+    }
     window.setTimeout(()=>{
+      doors.classList.add('opening');
       showroomCanvas.classList.add('is-fading');
       window.setTimeout(()=>{
         renderScene(1);
         trackShowroomRoom(1);
+        mobileDoorAnimations.forEach(a=>a.cancel());
         doors.classList.remove('opening');
         doors.hidden=true;
         requestAnimationFrame(()=>requestAnimationFrame(()=>showroomCanvas.classList.remove('is-fading')));
@@ -307,6 +246,14 @@ function show(i){
     window.setTimeout(()=>{transitioning=false;},reduced?30:950);
   },reduced?10:450);
 }
+// Tap central glass doors to enter on touchscreen, unchanged behavior outside the entrance.
+showroomCanvas.addEventListener('click',e=>{
+  if(current!==0 || transitioning || e.target.closest('button,a'))return;
+  const r=showroomCanvas.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+  if(x>=.28 && x<=.72 && y>=.27 && y<=.65) show(1);
+});
 document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);
 document.addEventListener('keydown',e=>{
   if(e.target.matches('input,textarea,select,[contenteditable="true"]'))return;
