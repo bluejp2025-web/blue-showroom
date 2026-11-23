@@ -166,6 +166,15 @@ scenes.forEach((_,i)=>{
   const preload=new Image();preload.src=srcFor(i);
   if(i>0){const glow=new Image();glow.src='edge-glow-'+String(i).padStart(2,'0')+'.png';}
 });
+// BLUE GA4: record a showroom room only after it is displayed.
+function trackShowroomRoom(i){
+  if(typeof gtag !== 'function')return;
+  gtag('event', 'showroom_room_view', {
+    room_number: String(i).padStart(2, '0'),
+    room_name: scenes[i][0]
+  });
+}
+
 let transitioning=false;
 const showroomCanvas=document.getElementById('canvas');
 function show(i){
@@ -185,6 +194,7 @@ function show(i){
       showroomCanvas.classList.add('is-fading');
       window.setTimeout(()=>{
         renderScene(1);
+        trackShowroomRoom(1);
         doors.classList.remove('opening');
         doors.hidden=true;
         requestAnimationFrame(()=>requestAnimationFrame(()=>showroomCanvas.classList.remove('is-fading')));
@@ -196,6 +206,7 @@ function show(i){
   showroomCanvas.classList.add('is-fading');
   window.setTimeout(()=>{
     renderScene(target);
+    trackShowroomRoom(target);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       showroomCanvas.classList.remove('is-fading');
     }));
@@ -267,4 +278,5 @@ window.addEventListener('resize',()=>{
   hint.textContent=mobile?(current===6?'→ 右スワイプで前へ':current===0?'← 左スワイプで入館':'← 左スワイプで次へ / 右で戻る'):(current===6?'↑ スクロールで前のシーンへ':current===0?'↓ スクロールで入館':'↓ スクロールで次のシーンへ');
 });
 renderScene(incoming>=1&&incoming<=6?incoming:0);
+trackShowroomRoom(current);
 </script></body></html>
