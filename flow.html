@@ -1,5 +1,15 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="BLUEの車・バイク買取の流れ。ご相談から査定・ご契約・お支払いまで。"><title>買取の流れ | MOTOR VEHICLE TRADING BLUE</title>
+<html lang="ja"><head>
+<!-- Google Analytics (BLUE) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJTVKLP5GL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-YJTVKLP5GL");
+</script>
+<!-- End Google Analytics -->
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="BLUEの車・バイク買取の流れ。ご相談から査定・ご契約・お支払いまで。"><title>買取の流れ | MOTOR VEHICLE TRADING BLUE</title>
 <style>
 :root{--paper:#f5f0e3;--ink:#39342f;--brown:#795841;--gold:#b38b52;--teal:#17464a;--wine:#6c2835}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#102e32;color:var(--ink);font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",Georgia,serif}a{color:inherit}
@@ -106,4 +116,34 @@ nav.nav,nav.topnav{justify-content:flex-end}
 const from=Number(new URLSearchParams(location.search).get('from'));
 if(from>=1&&from<=6){document.querySelectorAll('a[href="index.html"]').forEach(a=>a.href='index.html?return='+Math.min(from+1,6));}
 if('IntersectionObserver' in window){const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}}),{threshold:.08,rootMargin:'0px 0px 40px 0px'});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));}else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
-</script></body></html>
+</script>
+<script>
+/* BLUE GA4: 案内ページからCONTACTへの遷移クリック */
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a[href]');
+  if (!a) return;
+  const href = a.getAttribute('href') || '';
+  if (!/^contact\.html(?:[?#]|$)/i.test(href)) return;
+  if (typeof gtag !== 'function') return;
+  e.preventDefault();
+  const destination = new URL(href, location.href).href;
+  let moved = false;
+  const go = function() {
+    if (moved) return;
+    moved = true;
+    if (a.target === '_blank') window.open(destination, '_blank', 'noopener');
+    else location.href = destination;
+  };
+  gtag('event', 'blue_contact_click', {
+    source_page: 'FLOW',
+    contact_method: 'CONTACTページへ',
+    link_url: destination,
+    transport_type: 'beacon',
+    event_callback: go,
+    event_timeout: 1200
+  });
+  setTimeout(go, 1400);
+}, true);
+</script>
+
+</body></html>
