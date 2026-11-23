@@ -140,6 +140,100 @@ html.blue-mobile .strip{display:none!important}
 .door-effect.opening .door-left{transform:translateX(-21.3%)}
 .door-effect.opening .door-right{transform:translateX(22%)}
 @media(prefers-reduced-motion:reduce){.door-effect .door-leaf{transition-duration:.01s}}
+
+/* BLUEショールーム：スマホ表示最適化
+   PC版・自動ドア・各シーンの動作は変更しない */
+
+@media (max-width:700px), (hover:none) and (pointer:coarse) {
+
+  /* 画像上の空白を削除 */
+  .top {
+    display: none !important;
+  }
+
+  /* ショールーム画像を横幅いっぱいに */
+  .stage {
+    min-height: 0 !important;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .canvas {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .canvas > img#sceneImg {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: none !important;
+    object-fit: contain;
+  }
+
+  /* 下の案内をコンパクトに */
+  .guide {
+    min-height: 0 !important;
+    padding: 12px 12px 15px !important;
+    gap: 9px !important;
+  }
+
+  .guide .poster-copy {
+    gap: 4px;
+  }
+
+  .guide .poster-title,
+  .guide b {
+    font-size: clamp(19px, 5vw, 25px);
+    line-height: 1.25;
+  }
+
+  .guide .poster-description,
+  .guide .ja {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  /* 入館ボタンをすっきり */
+  .guide .action {
+    min-height: 42px;
+    padding: 10px 25px;
+    font-size: 13px;
+  }
+
+  /* スマホのサムネイル非表示 */
+  .strip {
+    display: none !important;
+  }
+}
+
+/* Googleサイト埋め込みで画面幅が広く判定される場合 */
+html.blue-mobile .top {
+  display: none !important;
+}
+html.blue-mobile .stage {
+  min-height: 0 !important;
+  padding: 0 !important;
+}
+html.blue-mobile .canvas {
+  display: block;
+  width: 100%;
+}
+html.blue-mobile .canvas > img#sceneImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none !important;
+}
+html.blue-mobile .guide {
+  min-height: 0 !important;
+  padding: 12px 12px 15px !important;
+  gap: 9px !important;
+}
 </style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="BLUE_entrance_final.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true"><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 // Googleサイトの埋め込み幅によらず、スマートフォンのサムネイルを非表示。
 if(/Android.*Mobile|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent)){
