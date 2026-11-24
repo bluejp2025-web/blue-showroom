@@ -181,11 +181,33 @@ html.blue-mobile .guide {min-height:0!important;padding:12px 12px 15px!important
 
 /* BLUE: disable decorative sign glow on all scenes. */
 .edgeglow{display:none!important;animation:none!important}
+
+/* BLUE: desktop viewport fit, including Google Sites iframe. */
+@media (min-width:701px) and (hover:hover) and (pointer:fine){
+ html:not(.blue-mobile) .top{display:none}
+ html:not(.blue-mobile) .stage{min-height:0}
+ html:not(.blue-mobile) .canvas>img#sceneImg{width:auto;height:auto;max-width:100%;max-height:max(120px,calc(var(--blue-visible-height, 100dvh) - 115px));object-fit:contain}
+ html:not(.blue-mobile) .guide{min-height:100px;padding:10px 18px;gap:12px;flex-wrap:nowrap}
+ html:not(.blue-mobile) .guide .poster-copy{width:auto;flex:1;gap:3px}
+ html:not(.blue-mobile) .guide .poster-title,html:not(.blue-mobile) .guide b{font-size:clamp(18px,2vw,30px)}
+ html:not(.blue-mobile) .guide .poster-copy::before,html:not(.blue-mobile) .guide .poster-copy::after{margin:2px 0}
+}
 </style></head><body><header class="top" aria-hidden="true"></header><main><div class="stage"><button class="nav prev" aria-label="前のシーン" id="prev">❮</button><div class="canvas" id="canvas"><img id="sceneImg" alt="BLUEバーチャルショールーム" src="BLUE_entrance_final.jpg"><div class="door-effect" id="doorEffect" aria-hidden="true"><div class="door-interior"></div><div class="door-leaf door-left"></div><div class="door-leaf door-right"></div></div><img class="edgeglow" id="edgeglow" src="edge-glow-01.png" alt="" aria-hidden="true" hidden><button id="hotspot" class="hotspot" aria-label="光る看板を開く" hidden></button></div><button class="nav next" id="next" aria-label="次のシーン">❯</button><div class="scroll-hint" id="scrollHint">↓ スクロールで次のシーンへ</div></div><div class="guide" id="guide" aria-live="polite"></div><div class="strip" id="thumbs"></div></main><script>
 // Googleサイトの埋め込み幅によらず、スマートフォンのサムネイルを非表示。
 if(/Android.*Mobile|iPhone|iPod|Windows Phone|Mobile/i.test(navigator.userAgent)){
   document.documentElement.classList.add('blue-mobile');
 }
+
+// The outer Google Sites viewport is cross-origin; screen height is a conservative fallback.
+function blueFitDesktop(){
+ if(!matchMedia('(min-width:701px) and (hover:hover) and (pointer:fine)').matches || document.documentElement.classList.contains('blue-mobile'))return;
+ const embedded=window.self!==window.top;
+ const screenBudget=screen.availHeight-165;
+ const visible=Math.min(window.innerHeight, embedded?screenBudget:window.innerHeight);
+ document.documentElement.style.setProperty('--blue-visible-height',Math.max(240,visible)+'px');
+}
+blueFitDesktop();window.addEventListener('resize',blueFitDesktop);
+
 const scenes=[["WELCOME", "00"], ["ENTRANCE", "01"], ["CONSULTATION", "02"], ["APPRAISAL", "03"], ["KIDS ROOM", "04"], ["CAFÉ SPACE", "05"], ["APPAREL & FRONT", "06"]];
 const signs=[["WHY BLUE ？", "BLUEが選ばれる理由", "kaitori.html", [90.0, 56.5, 9.2, 27.0]], ["How It Works", "買取の流れ", "flow.html", [90.0, 57.5, 8.9, 24.0]], ["All Vehicles Welcome", "どんなお車・バイクもご相談ください", "vehicles.html", [89.0, 56.5, 10.1, 28.0]], ["Chat & Quote", "LINE相談・無料査定", "contact.html", [85.5, 53.5, 9.8, 28.0]], ["ABOUT BLUE", "BLUEについて", "about.html", [82.3, 43.5, 12.0, 31.0]], ["ACCESS・PRIVACY", "アクセス・個人情報保護", "access.html", [87.4, 40.7, 9.0, 25.0]]];
 let current=0;
@@ -304,7 +326,9 @@ document.addEventListener('keydown',e=>{
 // Mouse wheel / trackpad: advance one still image at a time without moving its contents.
 let wheelAccum=0,lastWheelSceneAt=0,wheelDirection=0;
 window.addEventListener('wheel',e=>{
-  if(e.ctrlKey||e.metaKey||!e.deltaY)return; // keep browser zoom gestures intact
+  if(e.ctrlKey||e.metaKey||!e.deltaY)return;
+  // Outside the image, allow normal scrolling to reach the guide and thumbnails.
+  if(matchMedia('(min-width:701px) and (hover:hover) and (pointer:fine)').matches && !document.documentElement.classList.contains('blue-mobile') && !e.target.closest('.stage'))return; // keep browser zoom gestures intact
   // At either endpoint normal page scrolling remains available.
   const dir=e.deltaY>0?1:-1;
   if((dir>0&&current===6)||(dir<0&&current===0))return;
