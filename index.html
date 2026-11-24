@@ -203,13 +203,16 @@ function renderScene(i){current=Math.max(0,Math.min(6,i));const _door=document.g
   bindBlueInfoLink();}
 }
 
-// BLUE GA4: link click tracking is bound directly when the dynamic link is rendered.
-// This avoids relying on delegated events across the embedded Google Sites frame.
+// BLUE GA4: one capture-phase document listener handles the dynamically
+// recreated "詳しくはこちら" anchor in both direct and embedded contexts.
+let blueInfoClickListenerInstalled = false;
 function bindBlueInfoLink() {
-  const a = guide.querySelector('a.action[href]');
-  if (!a || current === 0 || a.dataset.blueTracked === '1') return;
-  a.dataset.blueTracked = '1';
-  a.addEventListener('click', function(e) {
+  if (blueInfoClickListenerInstalled) return;
+  blueInfoClickListenerInstalled = true;
+  document.addEventListener('click', function(e) {
+    const target = e.target;
+    const a = target && target.closest ? target.closest('a.action[href]') : null;
+    if (!a || !guide.contains(a) || current === 0) return;
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     blueTrack('blue_info_link_click', {
       room_number: String(current).padStart(2, '0'),
