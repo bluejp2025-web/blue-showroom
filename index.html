@@ -203,7 +203,7 @@ if(/Android|iPhone|iPad|iPod|Windows Phone|Mobile/i.test(navigator.userAgent) ||
 function blueFitDesktop(){
  if(!matchMedia('(min-width:701px)').matches || document.documentElement.classList.contains('blue-mobile'))return;
  const embedded=window.self!==window.top;
- const screenBudget=screen.availHeight-100;
+ const screenBudget=screen.availHeight-20;
  const visible=Math.min(window.innerHeight, embedded?screenBudget:window.innerHeight);
  document.documentElement.style.setProperty('--blue-visible-height',Math.max(240,visible)+'px');
 }
