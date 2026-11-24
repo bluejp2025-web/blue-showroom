@@ -199,20 +199,26 @@ function renderScene(i){current=Math.max(0,Math.min(6,i));const _door=document.g
   if(current===0){hotspot.hidden=true;edge.hidden=true;guide.innerHTML='<div class="poster-copy"><span class="poster-title">CONCEPT SHOWROOM</span><div class="poster-description">この先はBLUEの世界観を表現した架空のショールームです</div></div><button type="button" class="action" id="enter">入館する →</button>';document.getElementById('enter').onclick=()=>show(1)}
   else {const s=signs[current-1];hotspot.hidden=true;hotspot.onclick=null;edge.hidden=true;edge.src='edge-glow-'+String(current).padStart(2,'0')+'.png';
   /* Keep the gold trim lighting decorative only. Navigation uses the detail button. */
-  guide.innerHTML='<div class="poster-copy"><b>'+s[0]+'</b><div class="ja">'+s[1]+'</div></div><a class="action" href="'+linkFor(current)+'">詳しくはこちら →</a>';}
+  guide.innerHTML='<div class="poster-copy"><b>'+s[0]+'</b><div class="ja">'+s[1]+'</div></div><a class="action" href="'+linkFor(current)+'">詳しくはこちら →</a>';
+  bindBlueInfoLink();}
 }
 
-// BLUE GA4: detail link clicks (including dynamically rendered links).
-guide.addEventListener('click', function(e) {
-  const a = e.target.closest('a.action[href]');
-  if (!a || current === 0) return;
-  blueTrack('blue_info_link_click', {
-    room_number: String(current).padStart(2, '0'),
-    room_name: scenes[current][0],
-    page_name: signs[current-1][0],
-    link_url: a.href
-  }, a, e);
-}, true);
+// BLUE GA4: link click tracking is bound directly when the dynamic link is rendered.
+// This avoids relying on delegated events across the embedded Google Sites frame.
+function bindBlueInfoLink() {
+  const a = guide.querySelector('a.action[href]');
+  if (!a || current === 0 || a.dataset.blueTracked === '1') return;
+  a.dataset.blueTracked = '1';
+  a.addEventListener('click', function(e) {
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    blueTrack('blue_info_link_click', {
+      room_number: String(current).padStart(2, '0'),
+      room_name: scenes[current][0],
+      page_name: signs[current-1][0],
+      link_url: a.href
+    }, a, e);
+  }, true);
+}
 
 // Preload showroom photos and their gold-edge light overlays.
 scenes.forEach((_,i)=>{
