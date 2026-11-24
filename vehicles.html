@@ -8,6 +8,23 @@
   function gtag(){dataLayer.push(arguments);}
   gtag("js", new Date());
   gtag("config", "G-YJTVKLP5GL");
+  // BLUE GA4: explicit destination; bounded wait for same-tab navigation.
+  function blueTrack(name, params, anchor, event) {
+    const payload = Object.assign({}, params, {send_to: 'G-YJTVKLP5GL'});
+    const sameTab = anchor && event && !event.defaultPrevented &&
+      event.button === 0 && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey &&
+      (!anchor.target || anchor.target === '_self') && !anchor.hasAttribute('download') &&
+      /^https?:$/i.test(new URL(anchor.href, location.href).protocol);
+    if (!sameTab) { gtag('event', name, payload); return; }
+    event.preventDefault();
+    const destination = anchor.href;
+    let moved = false;
+    const go = () => { if (!moved) { moved = true; location.assign(destination); } };
+    setTimeout(go, 900);
+    try { gtag('event', name, Object.assign(payload, {event_callback: go, event_timeout: 800})); }
+    catch (_) { go(); }
+  }
+
 </script>
 <!-- End Google Analytics -->
 
@@ -88,24 +105,11 @@ document.addEventListener('click', function(e) {
   const href = a.getAttribute('href') || '';
   if (!/^contact\.html(?:[?#]|$)/i.test(href)) return;
   if (typeof gtag !== 'function') return;
-  e.preventDefault();
-  const destination = new URL(href, location.href).href;
-  let moved = false;
-  const go = function() {
-    if (moved) return;
-    moved = true;
-    if (a.target === '_blank') window.open(destination, '_blank', 'noopener');
-    else location.href = destination;
-  };
-  gtag('event', 'blue_contact_click', {
+  blueTrack('blue_contact_click', {
     source_page: 'LINEUP',
     contact_method: 'CONTACTページへ',
-    link_url: destination,
-    transport_type: 'beacon',
-    event_callback: go,
-    event_timeout: 1200
-  });
-  setTimeout(go, 1400);
+    link_url: a.href
+  }, a, e);
 }, true);
 </script>
 
@@ -117,12 +121,11 @@ document.addEventListener('click', function(e) {
   const roomMap = {"1": "ENTRANCE", "2": "CONSULTATION", "3": "APPRAISAL", "4": "KIDS ROOM", "5": "CAFÉ SPACE", "6": "APPAREL & FRONT"};
   const params = new URLSearchParams(location.search);
   const fromRoom = params.get('from') || '';
-  gtag('event', 'blue_info_page_view', {
+  blueTrack('blue_info_page_view', {
     page_name: "LINEUP",
     page_path: "/vehicles.html",
     source_room_number: fromRoom,
-    source_room_name: roomMap[fromRoom] || 'DIRECT_OR_OTHER',
-    transport_type: 'beacon'
+    source_room_name: roomMap[fromRoom] || 'DIRECT_OR_OTHER'
   });
 })();
 </script>
